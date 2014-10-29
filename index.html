@@ -1,0 +1,134 @@
+<!DOCTYPE html><!--Panda Slides HTML5 Slide Template
+|
+Based on Google IO 2012/2013 HTML5 Slide Template
+by Eric Bidelman <ebidel@gmail.com>
+   Luke Mahé <lukem@google.com>
+URL: https://code.google.com/p/io-2012-slides--><html><head><title>Panda Slides</title><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="chrome=1"><!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">--><!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">--><!-- This one seems to work all the time, but really small on ipad--><!-- <meta name="viewport" content="initial-scale=0.4">--><meta name="apple-mobile-web-app-capable" content="yes"><link rel="stylesheet" media="all" href="styles/pandastrike.css"><link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/phone.css"><link rel="stylesheet" media="all" href="font-awesome/css/font-awesome.css"><!-- This amazingness opens all links in a new tab.--><base target="_blank"><script data-main="js/slides" src="js/require-1.0.8.min.js"></script></head><body style="opacity: 0"><slides class="layout-widescreen"><slide class="logoslide nobackground"><article class="flexbox vcenter"><span><img src="images/pandastrike-logo-text.jpg"/></span></article></slide><slide class="title-slide segue nobackground"><aside class="gdbar"><img src="images/pandastrike-logo-256.png"/></aside><!-- The content of this hgroup is replaced programmatically through the slide_config.json.--><hgroup class="auto-fadein"><h1 data-config-title=""><!-- populated from slide_config.json--></h1><h2 data-config-subtitle=""><!-- populated from slide_config.json--></h2><p data-config-presenter=""><!-- populated from slide_config.json--></p></hgroup></slide><slide><hgroup><h2>Outline</h2></hgroup><article><ul>
+<li>Why Yet Another Framework?</li>
+<li>Polymer architecture</li>
+<li>Case Study: Glideroom</li>
+</ul>
+</article></slide><slide><hgroup><h2> Why Yet Another Framework?</h2></hgroup><article class="flexbox vcenter"><ul class="build"><li>Polyfills for old browsers</li><li>Declarative element creation (No more <code>document.registerElement</code>)</li><li>Declarative event mapping</li><li>Declarative layout using attributes</li><li>But wait, there's more!</li><ul><li>Component library</li><li>UI designer</li></ul></ul></article><aside class="note"><img src="images/declare_all_the_things.jpg" class="reflect"/></aside></slide><slide><hgroup><h2>Declarative Syntax</h2></hgroup><article><pre data-lang="html" class="prettyprint">&lt;!-- import Polymer -->
+&lt;link rel="import" href="polymer/polymer.html">
+&lt;!-- define custom element -->
+&lt;polymer-element name="my-element" noscript>
+  &lt;template>
+    &lt;h2>Hi, I'm a custom element!&lt;/h2>
+  &lt;/template>
+&lt;/polymer-element>
+</pre><ul class="build"><li>Polymer uses custom elements to define custom elements</li><li><code>&lt;template></code> defines the contents of the Shadow DOM</li><li><code>noscript</code> attribute lets us define element without JavaScript</li></ul></article><aside class="note"><img src="images/yo_dawg.jpg"/></aside></slide><slide><hgroup><h2>Let's use it!</h2></hgroup><article><pre data-lang="html" class="prettyprint">&lt;head>
+  &lt;!-- load platform polyfills -->
+  &lt;script src="platform/platform.js">&lt;/script>
+  &lt;!-- import custom elements -->
+  &lt;link rel="import" href="polymer/polymer.html">
+  &lt;link rel="import" href="my-element.html">
+&lt/head>
+
+&lt;body>
+  &lt;my-element>&lt;/my-element>
+&lt;/body>
+</pre><h3>Result</h3><iframe id="example1" data-src="/examples/1/index.html" style="height: 70px"></iframe></article></slide><slide hidden="hidden"><hgroup><h2>Light &amp; Shadow</h2></hgroup><article><p><code>&lt;content></code> defines an insertion point</p><p>It will contain the contents of the custom tag (a.k.a Light DOM)</p><pre data-lang="html" class="prettyprint">&lt;polymer-element name="my-element" noscript>
+  &lt;template>
+    &lt;h2>Hi, I'm <b>&lt;content>&lt;/content></b>&lt;/h2>
+  &lt;/template>
+&lt;/polymer-element>
+</pre><pre data-lang="html" class="prettyprint">&lt;my-element>Light DOM&lt;/my-element>
+</pre><h3>Result</h3><iframe id="example1" data-src="/examples/1b/index.html" style="height: 70px"></iframe></article></slide><slide><hgroup><h2>Data Binding</h2></hgroup><article><pre data-lang="html" class="prettyprint">&lt;polymer-element name="my-element">
+  &lt;template>
+    &lt;h2><b>{{greeting}}</b>&lt;/h2>
+  &lt;/template>
+  &lt;script src="my-element.js">&lt;/script>
+&lt;/polymer-element>
+</pre><pre data-lang="javascript" class="prettyprint">Polymer("my-element", {
+  <b>greeting: "Hi, I'm a custom element!"</b>
+});
+</pre><h3>Result</h3><iframe id="example2" data-src="/examples/2/index.html" style="height: 70px"></iframe></article><aside class="note"><section><ul><li>Use web console to manipulate the <code>greeting</code> attribute</li><li>Mention that bindings are TWO-WAY (for elements that support it)</li></ul></section></aside></slide><slide><hgroup><h2>Declarative Event Mapping</h2></hgroup><article><pre data-lang="html" class="prettyprint">&lt;polymer-element name="my-element" <b>on-click="{{clickHandler}}"</b>>
+  &lt;template>
+    &lt;h2>{{greeting}}&lt;/h2>
+  &lt;/template>
+  &lt;script src="my-element.js">&lt;/script>
+&lt;/polymer-element>
+</pre><pre data-lang="javascript" class="prettyprint">Polymer("my-element", {
+  greeting: "Click me!",
+  <b>clickHandler: function() {
+    this.greeting = "Hello, " + prompt("What is your name?") + "!";
+  }</b>
+});
+</pre><iframe id="example3" data-src="/examples/3/index.html" style="height: 70px"></iframe></article></slide><slide><hgroup><h2>Declarative Layout</h2><h3>Flexbox made simple</h3></hgroup><article><p>Use attributes, not CSS!</p><pre data-lang="html" class="prettyprint">&lt;div horizontal layout>
+  &lt;div>One&lt;/div>
+  &lt;div>Two&lt;/div>
+  &lt;div>Three&lt;/div>
+&lt;/div>
+</pre><p>Result</p><iframe data-src="/examples/flexbox/index1.html" style="height: 80px"></iframe></article></slide><slide><hgroup><h2>Declarative Layout</h2><h3>Flexbox made simple</h3></hgroup><article><p>Flex it!</p><pre data-lang="html" class="prettyprint">&lt;div horizontal layout>
+  &lt;div>One&lt;/div>
+  &lt;div flex>Two&lt;/div>
+  &lt;div>Three&lt;/div>
+&lt;/div>
+</pre><p>Result</p><iframe data-src="/examples/flexbox/index2.html" style="height: 80px"></iframe></article></slide><slide><hgroup><h2>Declarative Layout</h2><h3>Flexbox made simple</h3></hgroup><article><p>Flex with proportions</p><pre data-lang="html" class="prettyprint">&lt;div horizontal layout>
+  &lt;div flex>One&lt;/div>
+  &lt;div flex two>Two&lt;/div>
+  &lt;div flex three>Three&lt;/div>
+&lt;/div>
+</pre><p>Result</p><iframe data-src="/examples/flexbox/index3.html" style="height: 80px"></iframe></article></slide><slide class="segue dark nobackground"><aside class="gdbar right bottom"><img src="images/pandastrike-logo-256.png"/></aside><hgroup class="auto-fadein"><h2>Case Study</h2><h3>Glideroom.com</h3></hgroup></slide><slide><hgroup><h2>Overview</h2><h3>What is Glideroom?</h3></hgroup><article><ul><li>Video conferencing in your browser</li><li>Built on WebRTC</li><li>NO registration necessary</li><li>Get a room with a single click</li><li>We call it: "Hangouts without the Hangups"</li></ul></article></slide><slide><hgroup><h2>Architecture</h2></hgroup><article><ul><li>Front-end built entirely with Polymer</li><li>Component-based architecture</li><li>Everything is a custom element</li><li>Emphasis on small, focused, reusable components</li><li>Components interact via well-defined public API</li><li>Asynchronous communication via events</li></ul></article></slide><slide><hgroup><h2>Show me the Code!</h2><h3>room.html</h3></hgroup><article><pre data-lang="html" class="prettyprint">&lt;body>
+  <b>&lt;glideroom-backend configuration="/configuration.json">&lt;/glideroom-backend></b>
+  &lt;div vertical layout fit>
+    &lt;glideroom-toolbar>&lt;/glideroom-toolbar>
+    &lt;div horizontal layout flex>
+      <b>&lt;glideroom-conference flex>&lt;/glideroom-conference></b>
+      &lt;core-splitter direction="right" touch-action="none">&lt;/core-splitter>
+      <b>&lt;glideroom-chat>&lt;/glideroom-chat></b>
+    &lt;/div>
+    &lt;footer-element>&lt;/footer-element>
+  &lt;/div>
+  &lt;glideroom-dialog-entry id="entry">&lt;/glideroom-dialog-entry>
+  &lt;glideroom-dialog-settings id="settings">&lt;/glideroom-dialog-settings>
+  &lt;script src="js/room.s">&lt;/script>
+&lt;/body>
+</pre></article></slide><slide><hgroup><h2>Show me the Code!</h2><h3>room.js</h3></hgroup><article><pre data-lang="javascript" class="prettyprint"><b>var backend = document.querySelector("glideroom-backend");</b>
+var chat = document.querySelector("glideroom-chat");
+
+window.addEventListener("polymer-ready", function() {
+  chat.addEventListener("chat-message", function(event) {
+    backend.sendMessage(event.detail);
+  });
+  <b>backend.addEventListener("room-event", function(event) {
+    chat.addMessage(event.detail);
+    conference.processEvent(event.detail);
+  });</b>
+  backend.addEventListener("room-ready", function(event) {
+    conference.start(event.detail);
+  });
+});
+</pre></article></slide><slide class="segue dark nobackground"><aside class="gdbar right bottom"><img src="images/pandastrike-logo-256.png"/></aside><hgroup class="auto-fadein"><h2>Resources</h2></hgroup></slide><slide><hgroup><h2>RTFM</h2></hgroup><article><ul>
+<li>Polymer<ul>
+<li>Polymer Project: <a href="https://www.polymer-project.org">polymer-project.org</a></li>
+<li>Polymer API docs: <a href="http://bit.ly/polymer-api">bit.ly/polymer-api</a></li>
+<li>Polymer Databinding: <a href="http://bit.ly/polymer-databinding">bit.ly/polymer-databinding</a></li>
+<li>Polymer Layout Reference: <a href="http://bit.ly/polymer-layout">bit.ly/polymer-layout</a></li>
+</ul>
+</li>
+<li>Components<ul>
+<li>Core Elements: <a href="http://bit.ly/core-elements">bit.ly/core-elements</a></li>
+<li>Core Elements Demo: <a href="http://bit.ly/core-elements-demo">bit.ly/core-elements-demo</a></li>
+<li>Paper Elements: <a href="http://bit.ly/paper-elements-demo">bit.ly/paper-elements</a></li>
+<li>Paper Elements Demo: <a href="http://bit.ly/paper-elements-demo">bit.ly/paper-elements-demo</a></li>
+</ul>
+</li>
+<li>Other Resources<ul>
+<li>Built with Polymer: <a href="http://builtwithpolymer.org">builtwithpolymer.org</a></li>
+<li>Polymer Themes: <a href="https://polymerthemes.com">polymerthemes.com</a></li>
+</ul>
+</li>
+</ul>
+</article></slide><slide class="thank-you-slide segue nobackground"><aside class="gdbar right"><img src="images/pandastrike-logo-256.png"/></aside><article class="flexbox vleft auto-fadein"><h2>&lt;Thank You!&gt;</h2><!-- p Important contact information goes here.--></article><p data-config-contact="" class="auto-fadein"><!-- populated from slide_config.json--></p></slide><slide class="logoslide dark nobackground"><article class="flexbox vcenter"><span><img src="images/pandastrike-wide.png"/></span></article></slide><slide class="backdrop"></slide><script type="text/javascript">// find all iframes and define shortcut variables according to their IDs
+[].slice.apply(document.querySelectorAll("iframe")).forEach(function(example) {
+  window[example.id] = example;
+});
+</script></slides><script>var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script><!--[if IE]><script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script><script>CFInstall.check({mode: 'overlay'});</script><![endif]--></body></html>
